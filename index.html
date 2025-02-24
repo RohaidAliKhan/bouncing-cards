@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <!-- <link rel="stylesheet" href="styles.css" /> -->
+    <style>
+      body {
+        color: #fff;
+      }
+      .spacer {
+        height: 100vh;
+      }
+      .mwg_landing2 {
+        margin: -50vh 0 0;
+      }
+
+      .mwg_landing2 .pin {
+        height: 400vh;
+      }
+
+      .mwg_landing2 .container {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .mwg_landing2 .card {
+        flex: 0 0 360px;
+        aspect-ratio: 0.86;
+        border-radius: 12px;
+        object-fit: cover;
+        border: 1px solid #232323;
+        background: #0d0d0d;
+        padding: 25px;
+        flex-direction: column;
+      }
+
+      .mwg_landing2 p {
+        font-size: 18px;
+        margin: var(--grid-gutter) 0 0;
+      }
+
+      .mwg_landing2 img {
+        width: max-content;
+        transform-origin: 0 0;
+      }
+
+      @media (max-width: 1280px) {
+        .mwg_landing2 .container {
+          padding: 0 0 0 4vw;
+        }
+
+        .mwg_landing2 .card {
+          margin: 0 0 0 -4vw;
+        }
+      }
+
+      @media (max-width: 1024px) {
+        .mwg_landing2 img {
+          scale: 0.5;
+        }
+
+        .mwg_landing2 .container {
+          padding: 0 0 0 10vw;
+        }
+
+        .mwg_landing2 .card {
+          flex: 0 0 320px;
+          margin: 0 0 0-10vw;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .mwg_landing2 {
+          margin: 0;
+        }
+
+        .mwg_landing2 .container {
+          padding: 50px 15px 0;
+          height: auto;
+          justify-content: initial;
+          gap: 15px;
+          overflow-x: scroll;
+          scroll-snap-type: x mandatory;
+        }
+
+        .mwg_landing2 .card {
+          margin: 0;
+          scroll-snap-align: center;
+        }
+
+        .mwg_landing2 .pin {
+          height: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="spacer"></div>
+    <section class="l-learn pr sec-black">
+      <div class="mwg_landing2">
+        <div class="pin">
+          <div class="container card-wrapper">
+            <div class="card f f-space">
+              <div class="card-front">
+                <img src="https://madewithgsap.com/assets/img/card1.svg" alt="" />
+                <div>
+                  <h2 class="sm-title">Beginners <br />friendly</h2>
+                  <p>Jump right in! Our resources cater to all skill levels, ensuring a smooth learning curve for newcomers.</p>
+                </div>
+              </div>
+              <div class="card-back">
+                <h2>hi there</h2>
+              </div>
+            </div>
+            <div class="card f f-space">
+              <div class="card-front">
+                <img src="https://madewithgsap.com/assets/img/card2.svg" alt="" />
+                <div>
+                  <h2 class="sm-title">Easy to <br />implement</h2>
+                  <p>Get started effortlessly with our code snippets and integrate them into your project in no time.</p>
+                </div>
+              </div>
+              <div class="card-back">
+                <h2>hi there</h2>
+              </div>
+            </div>
+            <div class="card f f-space">
+              <div class="card-front">
+                <img src="https://madewithgsap.com/assets/img/card3.svg" alt="" />
+                <div>
+                  <h2 class="sm-title">Performance optimized</h2>
+                  <p>Our effects are built with efficiency in mind: combining performance with creativity.</p>
+                </div>
+              </div>
+              <div class="card-back">
+                <h2>hi there</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="spacer"></div>
+
+    <script type="module">
+      import gsap from "https://cdn.skypack.dev/gsap";
+      import { ScrollTrigger } from "https://cdn.skypack.dev/gsap/ScrollTrigger";
+      import { CustomEase } from "https://cdn.skypack.dev/gsap/CustomEase";
+      gsap.registerPlugin(ScrollTrigger, CustomEase);
+
+      let mm = gsap.matchMedia();
+
+      // Apply this animation only for screens wider than 769px
+      mm.add("(min-width: 769px)", () => {
+        // Select main container and elements inside it
+        const container = document.querySelector(".mwg_landing2"),
+          pinnedElement = container.querySelector(".pin"),
+          cards = container.querySelectorAll(".card");
+
+        // Pin the element so it stays fixed during scrolling
+        ScrollTrigger.create({
+          trigger: pinnedElement,
+          start: "top top",
+          end: "bottom bottom",
+          pin: true,
+          pinSpacing: false,
+          scrub: true,
+        });
+
+        // Set initial positions for the cards
+        gsap.set(cards, {
+          yPercent: 50, // Move cards down by 50% of their height
+          y: 0.5 * window.innerHeight + 1, // Offset by half the viewport height
+          zIndex: (i) => i * 1,
+          cursor: "pointer",
+        });
+
+        // Create a GSAP timeline with ScrollTrigger
+        const timeline = gsap.timeline({
+          paused: true,
+          scrollTrigger: {
+            trigger: container,
+            start: "top top",
+            end: "bottom bottom",
+            scrub: true,
+          },
+        });
+        // Add a slight random rotation effect
+        timeline.to(
+          cards,
+          {
+            rotation: () => 20 * (Math.random() - 0.5), // Random rotation between -10° and +10°
+            stagger: -0.12,
+            duration: 0.5,
+            ease: "power3.out",
+          },
+          "sameStep"
+        );
+        // Animate cards moving upwards into position
+        timeline.to(
+          cards,
+          {
+            yPercent: 0,
+            y: 0, // Move them upwards by half the viewport height
+            duration: 1,
+            stagger: -0.12, // Each card animates slightly after the previous one
+            // ease: CustomEase.create("custom", "M0,0 C0,0 0.098,0.613 0.5,0.5 0.899,0.386 1,1 1,1"), // Smooth easing
+            ease: "elastic.out(1,0.5)",
+          },
+          "sameStep"
+        );
+
+        gsap.set(".card-wrapper", { perspective: 800 });
+        gsap.set(".card", { transformStyle: "preserve-3d" });
+        gsap.set(".card-back", { rotationY: -180 });
+        gsap.set([".card-back", ".card-front"], { backfaceVisibility: "hidden" });
+
+        document.querySelectorAll(".card").forEach((wrapper) => {
+          wrapper.addEventListener("mouseenter", () => {
+            gsap.to(wrapper, { duration: 1.2, rotationY: 180, ease: "back.out" });
+          });
+
+          wrapper.addEventListener("mouseleave", () => {
+            gsap.to(wrapper, { duration: 1.2, rotationY: 0, ease: "back.out" });
+          });
+        });
+
+        // Reset rotation back to normal
+        // timeline.to(
+        //   cards,
+        //   {
+        //     rotation: 0,
+        //     stagger: -0.12,
+        //     duration: 0.5,
+        //     ease: "power3.in",
+        //   },
+        //   "sameStep+=0.5"
+        // );
+      });
+    </script>
+  </body>
+</html>
